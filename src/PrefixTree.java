@@ -17,9 +17,7 @@ public class PrefixTree {
 		/* add items into the tree and build the tree*/
 		for(Object line_object: lines){
 			line=line_object.toString();
-			//System.out.println(line);
 			String []elements= line.split(",");
-			//System.out.println(elements);
 			addIntoTree(elements);
 			
 		}			
@@ -29,7 +27,6 @@ public class PrefixTree {
 	
 	public void addIntoTree(String[] elements){
 		PrefixTree ptr=this;
-		//System.out.println(Arrays.toString(elements));
 		for(String element: elements){
 			ptr=addIntoTreeElement(element,ptr);
 			
@@ -54,43 +51,38 @@ public class PrefixTree {
 				ptr=temp_created;
 				ptr.count=1L;
 
-				//System.out.println("leaving else");
 
 			}
 			
 		
-		//System.out.println("leaving addIntoTreeElement");
 
 		return ptr;
 	}
-	public void addToResult(List<Pair<String, Long>> result, List<Pair<String, Long>> stack){
+	public void addToResult(HashMap result, List<Pair<String, Long>> stack){
 		String temp_string="";
 		int counter=0;
 		for(Pair<String, Long> element:stack){
 			if(counter==0){
 				temp_string=element.getFirst();
-				result.add(new Pair<String, Long>(temp_string,((Long)element.getSecond())));
+				result.put(temp_string,(Long)element.getSecond());
 				counter++;
 				continue;
 			}
 			temp_string=temp_string+","+element.getFirst();
-			result.add(new Pair<String, Long>(temp_string,((Long)element.getSecond())));
+			result.put(temp_string,(Long)element.getSecond());
+
 		}
 		
 		
 	}
-	public void dfs(List result,List stack, PrefixTree ptr){
+	public void dfs(HashMap result,List stack, PrefixTree ptr){
 		if(ptr.prefix_tree.size()<1  && ptr!=this){
-			//System.out.println("inside if");
-			//System.out.println(stack);
+			
 			addToResult(result,stack);
-			//System.out.println("inside if");
 
 		}
 		for(Object key : ptr.prefix_tree.keySet()){
-			//System.out.println("child added to stack");
 			stack.add(new Pair((String)key,((PrefixTree)ptr.prefix_tree.get(key)).count));
-			//System.out.println(stack);
 			dfs(result,stack,(PrefixTree)ptr.prefix_tree.get(key));
 			stack.remove(stack.size()-1);
 			
@@ -98,9 +90,10 @@ public class PrefixTree {
 		
 	}
 	
-	public  List<Pair<String, Long>> getSequence(){
+	public  HashMap getSequence(){
 		
-		List<Pair<String, Long>> result = new ArrayList(),stack=new ArrayList();
+		List<Pair<String, Long>> stack=new ArrayList();
+		HashMap result = new HashMap();
         dfs(result,stack,this);
 		return result;
 	}
@@ -111,8 +104,7 @@ public class PrefixTree {
 		lines.add("a,b,d");
 		lines.add("f,g,h");
 		PrefixTree tree=new PrefixTree(lines);
-		List<Pair<String,Long>> result=tree.getSequence();
-		//System.out.print(result.toString());
+		HashMap result=tree.getSequence();
 		
 	}
 	

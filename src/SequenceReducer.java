@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.HashMap;
 import java.util.ArrayList;
 import org.apache.mahout.common.Pair;
 import java.io.IOException;
@@ -21,11 +22,10 @@ import org.apache.hadoop.mapreduce.Reducer;
 		
 		
 		PrefixTree tree=new PrefixTree(lines);
-		List<Pair<String,Long>> result=tree.getSequence();
-		System.out.println("key:"+key.toString()+"value: "+result.toString());
-		for(Pair<String,Long> sequences:result){
+		HashMap result=tree.getSequence();
+		for(Object key_sequence:result.keySet()){
 			
-			context.write(new Text(sequences.getFirst()),new LongWritable(sequences.getSecond()));
+			context.write(new Text(key_sequence.toString()),new LongWritable((Long)result.get(key_sequence)));
 		}
 		 
 		 
